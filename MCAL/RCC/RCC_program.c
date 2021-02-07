@@ -82,7 +82,8 @@ void RCC_voidInit(void)
 				}
 		#endif
 
-	#else		#error "Wrong clock system choice!"
+	#else
+				#error "Wrong clock system choice!"
 
 	#endif
 }

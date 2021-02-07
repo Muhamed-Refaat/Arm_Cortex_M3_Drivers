@@ -3,17 +3,112 @@
 #ifndef GPIO_INTERFACE_H_
 #define GPIO_INTERFACE_H_
 
+
+typedef enum{
+	DIO_E_INPUT_ANALOG      	 =0b0000  	    ,
+	DIO_E_INPUT_FLOATING    	 = 0b0100 	    ,
+	DIO_E_INPUT_PULL_UP      	= 0b1000  	    ,
+	DIO_E_INPUT_PULL_DOWN      = 0b10001111     ,
+	DIO_E_OUTPUT_2MHZ_PUSH     = 0b0010		    ,
+	DIO_E_OUTPUT_2MHZ_PULL   	= 0b00101111    ,
+	DIO_E_OUTPUT_2MHZ_OD	   = 0b0110	    	,
+	DIO_E_OUTPUT_2MHZ_AF_PP  = 0b1010	        ,
+	DIO_E_OUTPUT_2MHZ_AF_OD		=0b1110        	,
+	DIO_E_OUTPUT_10MHZ_PUSH		=0b0001			,
+	DIO_E_OUTPUT_10MHZ_PULL		=0b00011111		,
+	DIO_E_OUTPUT_10MHZ_OD		=0b0101			,
+	DIO_E_OUTPUT_10MHZ_AF_PP	=0b1001			,
+	DIO_E_OUTPUT_10MHZ_AF_OD	=0b1101			,
+	DIO_E_OUTPUT_50MHZ_PUSH		=0b0011			,
+	DIO_E_OUTPUT_50MHZ_PULL		=0b00111111		,
+	DIO_E_OUTPUT_50MHZ_OD		=0b0111			,
+	DIO_E_OUTPUT_50MHZ_AF_PP	=0b1011			,
+	DIO_E_OUTPUT_50MHZ_AF_OD	=0b1111			,
+}DIO_PinStatus_type;
+typedef enum{
+	DIO_PORTA=0,
+	DIO_PORTB,
+	DIO_PORTC,
+}DIO_Port_type;
+
+typedef enum
+{
+	LOW=0,
+	HIGH
+}DIO_Voltage_type;
+
+
+typedef enum
+{
+	PINA0=0,
+	PINA1=1,
+	PINA2,
+	PINA3,
+	PINA4,
+	PINA5,
+	PINA6,
+	PINA7,
+	PINA8,
+	PINA9,
+	PINA10,
+	PINA11,
+	PINA12,
+	PINA13,
+	PINA14,
+	PINA15,
+	PINB0,
+	PINB1,
+	PINB2,
+	PINB3,
+	PINB4,
+	PINB5,
+	PINB6,
+	PINB7,
+	PINB8,
+	PINB9,
+	PINB10,
+	PINB11,
+	PINB12,
+	PINB13,
+	PINB14,
+	PINB15,
+	PINC0,
+	PINC1,
+	PINC2,
+	TOTAL_PINS
+}DIO_Pin_type;
+
+
+void DIO_InitPin(DIO_Pin_type pin,DIO_PinStatus_type status);
+void	DIO_Initpin2(DIO_Pin_type pin,DIO_PinStatus_type status);
+void DIO_WritePin(DIO_Pin_type pin,DIO_Voltage_type volt);
+
+DIO_Voltage_type DIO_ReadPin(DIO_Pin_type pin);
+void DIO_TogglePin(DIO_Pin_type pin);
+void DIO_WritePort(DIO_Port_type port,u16 data);
+u16 DIO_ReadPort(DIO_Port_type port);
+void DIO_Init(void);
+
+
+
+
+
+
+
+
 /*void	DIO_voidSetPinDirection(port,pin,mode);*/
 void	DIO_voidSetPinDirection(u8 Copy_u8PortID,u8 Copy_u8PinID,u8 Copy_u8Mode);
 /*		if Pin is Output (High or Low)	*/
 void	DIO_voidSetPinValue(u8 Copy_u8PortID,u8 Copy_u8PinID,u8 Copy_u8Value);
+/*		Toggle output pin												*/
+void	DIO_voidTogglePin(u8 Copy_u8PortID,u8 Copy_u8PinID);
 /*		if Pin is Input (Return High or Low)	*/
 u8		DIO_u8GetPinValue(u8 Copy_u8PortID,u8 Copy_u8PinID);
 
 /*		SET PORT DIRECTION											*/
 void	DIO_voidSetPortDirection(u8 Copy_u8PortID,u32 Copy_u32Mode);
 /*		SET PORT VALUE												*/
-void	DIO_voidSetPortValue(u8 Copy_u8PortID,u8 Copy_u8Value);
+void	DIO_voidSetPortValue(u8 Copy_u8PortID,u16 Copy_u16Value);
 
 #define 		DIO_U8_SINGLE_ASSMPLY_INSTRUCTION				1
 

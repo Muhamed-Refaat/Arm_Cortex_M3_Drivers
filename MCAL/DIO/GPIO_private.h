@@ -40,6 +40,9 @@
 #define 		GPIOC_BRR						*((u32 *)(GPIOC_BASE_ADD + 0x14))
 #define 		GPIOC_LCKR						*((u32 *)(GPIOC_BASE_ADD + 0x18))
 
+#define 		ENUM						 1
+#define 		PREPROCESSOR				 0
+
 
 
 #endif /* GPIO_HEADERS_GPIO_PRIVATE_H_ */
