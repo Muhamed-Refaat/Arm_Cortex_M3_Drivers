@@ -105,7 +105,7 @@ void	DIO_voidSetPinValue(u8 Copy_u8PortID,u8 Copy_u8PinID,u8 Copy_u8Value)
 		}
 	}else{/*	Return ERROR	*/}
 #else
-	/*		Range Check							*/
+	/*		Range Check		NOTE CHECK DATA SHEET		*/
 	if( (Copy_u8PortID<3) && (Copy_u8PinID<16) )
 	{
 		switch(Copy_u8PortID)
@@ -216,20 +216,20 @@ void	DIO_voidTogglePin(u8 Copy_u8PortID,u8 Copy_u8PinID)
 		case DIO_U8_PORTA:
 			if(DIO_u8GetPinValue(GPIOA_IDR,Copy_u8PinID))
 				DIO_voidSetPinValue(DIO_U8_PORTA, Copy_u8PinID, DIO_U8_LOW);
-			else
-				DIO_voidSetPinValue(DIO_U8_PORTA, Copy_u8PinID, DIO_U8_HIGH)
+			else				DIO_voidSetPinValue(DIO_U8_PORTA, Copy_u8PinID, DIO_U8_HIGH);
+
 				break;
 		case DIO_U8_PORTB:
 			if(DIO_u8GetPinValue(GPIOB_IDR,Copy_u8PinID))
 				DIO_voidSetPinValue(DIO_U8_PORTB, Copy_u8PinID, DIO_U8_LOW);
-			else
-				DIO_voidSetPinValue(DIO_U8_PORTB, Copy_u8PinID, DIO_U8_HIGH)
+			else  				DIO_voidSetPinValue(DIO_U8_PORTB, Copy_u8PinID, DIO_U8_HIGH);
+
 				break;
 		case DIO_U8_PORTC:
 			if(DIO_u8GetPinValue(GPIOC_IDR,Copy_u8PinID))
 				DIO_voidSetPinValue(DIO_U8_PORTC, Copy_u8PinID, DIO_U8_LOW);
-			else
-				DIO_voidSetPinValue(DIO_U8_PORTC, Copy_u8PinID, DIO_U8_HIGH)
+			else   				DIO_voidSetPinValue(DIO_U8_PORTC, Copy_u8PinID, DIO_U8_HIGH);
+
 				break;
 
 		}
@@ -239,13 +239,13 @@ void	DIO_voidTogglePin(u8 Copy_u8PortID,u8 Copy_u8PinID)
 
 #elif 	DIO_FUNCTION_MODE_SELECT==ENUM
 
-void	DIO_Initpin2(DIO_Pin_type pin,DIO_PinStatus_type status)
+void	DIO_InitPin(DIO_Pin_type pin,DIO_PinStatus_type status)
 {
 	u8 					Local_Pin_num=pin%16;
 	DIO_Port_type		Local_PORT_num=pin/16;
 
 		/*		Range Check			*/
-		if(pin<35)
+		if(pin<TOTAL_PINS)
 		{
 			switch(Local_PORT_num)
 			{
@@ -328,68 +328,68 @@ void	DIO_Initpin2(DIO_Pin_type pin,DIO_PinStatus_type status)
 					if(status==DIO_E_INPUT_PULL_DOWN)
 						{
 							status=DIO_E_INPUT_PULL_UP;
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_INPUT_PULL_UP)
 						{
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_2MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_2MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_2MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_10MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_10MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_10MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_50MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_50MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_50MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOA_ODR,Local_Pin_num);
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOA_ODR,(Local_Pin_num+8));
 						}
 						else
 						{
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
+							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
 						}
 
 
@@ -474,68 +474,68 @@ void	DIO_Initpin2(DIO_Pin_type pin,DIO_PinStatus_type status)
 					if(status==DIO_E_INPUT_PULL_DOWN)
 						{
 							status=DIO_E_INPUT_PULL_UP;
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_INPUT_PULL_UP)
 						{
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_2MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_2MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_2MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_10MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_10MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_10MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_50MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_50MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_50MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOB_ODR,Local_Pin_num);
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOB_ODR,(Local_Pin_num+8));
 						}
 						else
 						{
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
+							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
 						}
 
 
@@ -616,72 +616,72 @@ void	DIO_Initpin2(DIO_Pin_type pin,DIO_PinStatus_type status)
 				/*		HIGH PORT				*/
 				else
 				{
-					Local_Pin_num -=8 ;
+					Local_Pin_num =Local_Pin_num-8 ;
 					if(status==DIO_E_INPUT_PULL_DOWN)
 						{
 							status=DIO_E_INPUT_PULL_UP;
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_INPUT_PULL_UP)
 						{
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_2MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_2MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_2MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_10MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_10MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_10MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_50MHZ_PULL)
 						{
 							status =DIO_E_OUTPUT_50MHZ_PUSH;
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							CLR_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							CLR_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else if(status==DIO_E_OUTPUT_50MHZ_PUSH)
 						{
 
 							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							SET_BIT(GPIOC_ODR,Local_Pin_num);
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
+							SET_BIT(GPIOC_ODR,(Local_Pin_num+8));
 						}
 						else
 						{
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
+							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
+							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
 						}
 
 
@@ -696,1119 +696,12 @@ void	DIO_Initpin2(DIO_Pin_type pin,DIO_PinStatus_type status)
 
 
 
-void 	DIO_InitPin(DIO_Pin_type pin,DIO_PinStatus_type status)
-{
-	u8 					Local_Pin_num=pin%16;
-	DIO_Port_type		Local_PORT_num=pin/16;
-
-	/*		Range Check			*/
-	if(pin<35)
-	{
-		switch(status)
-		{
-		case DIO_E_INPUT_ANALOG:
-			switch(Local_PORT_num)
-			{
-			case DIO_PORTA:
-				if( Local_Pin_num < 8 )
-				{
-					/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-					GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-				}
-				/*		HIGH PORT				*/
-				else
-				{
-					Local_Pin_num -=8 ;
-					GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-				}
-				break;
-			case DIO_PORTB:
-				if( Local_Pin_num < 8 )
-				{
-					/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-					GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-				}
-				/*		HIGH PORT				*/
-				else
-				{
-					Local_Pin_num -=8 ;
-					GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-				}
-				break;
-			case DIO_PORTC:
-				if( Local_Pin_num < 8 )
-				{
-					/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-					GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-				}
-				/*		HIGH PORT				*/
-				else
-				{
-					Local_Pin_num -=8 ;
-					GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-				}
-				break;
-			}
-			break;
-	case DIO_E_INPUT_FLOATING:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_INPUT_PULL_UP:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_INPUT_PULL_DOWN:
-		status=DIO_E_INPUT_PULL_UP;
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			break;
-		}
-		break;
-		/*OUTPUT*/
-	case DIO_E_OUTPUT_2MHZ_PUSH:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_2MHZ_PULL:
-		status =DIO_E_OUTPUT_2MHZ_PUSH;
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_2MHZ_OD:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_2MHZ_AF_PP:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_2MHZ_AF_OD:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		}
-		break;
-		/*OUTPUTEND*/
-		/*OUTPUT*/
-	case DIO_E_OUTPUT_10MHZ_PUSH:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_10MHZ_PULL:
-		status =DIO_E_OUTPUT_10MHZ_PUSH;
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOA_ODR,Local_Pin_num);
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-				CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_10MHZ_OD:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_10MHZ_AF_PP:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		}
-		break;
-	case DIO_E_OUTPUT_10MHZ_AF_OD:
-		switch(Local_PORT_num)
-		{
-		case DIO_PORTA:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-			}
-			break;
-		case DIO_PORTB:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		case DIO_PORTC:
-			if( Local_Pin_num < 8 )
-			{
-				/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-				GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			/*		HIGH PORT				*/
-			else
-			{
-				Local_Pin_num -=8 ;
-				GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-				GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-			}
-			break;
-		}
-		break;
-		/*OUTPUTEND*/
-		/*OUTPUT*/
-		case DIO_E_OUTPUT_50MHZ_PUSH:
-			switch(Local_PORT_num)
-			{
-			case DIO_PORTA:
-				if( Local_Pin_num < 8 )
-				{
-					/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-					GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-					SET_BIT(GPIOA_ODR,Local_Pin_num);
-				}
-				/*		HIGH PORT				*/
-				else
-				{
-					Local_Pin_num -=8 ;
-					GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-					SET_BIT(GPIOA_ODR,Local_Pin_num);
-				}
-				break;
-			case DIO_PORTB:
-				if( Local_Pin_num < 8 )
-				{
-					/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-					GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-					SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-				}
-				/*		HIGH PORT				*/
-				else
-				{
-					Local_Pin_num -=8 ;
-					GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-					SET_BIT(GPIOB_ODR,Local_Pin_num);
-
-				}
-				break;
-			case DIO_PORTC:
-				if( Local_Pin_num < 8 )
-				{
-					/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-					GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-					SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-				}
-				/*		HIGH PORT				*/
-				else
-				{
-					Local_Pin_num -=8 ;
-					GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-					GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-					SET_BIT(GPIOC_ODR,Local_Pin_num);
-
-				}
-				break;
-			}
-			break;
-			case DIO_E_OUTPUT_50MHZ_PULL:
-				status =DIO_E_OUTPUT_50MHZ_PUSH;
-				switch(Local_PORT_num)
-				{
-				case DIO_PORTA:
-					if( Local_Pin_num < 8 )
-					{
-						/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-						GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-						GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-						CLR_BIT(GPIOA_ODR,Local_Pin_num);
-					}
-					/*		HIGH PORT				*/
-					else
-					{
-						Local_Pin_num -=8 ;
-						GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-						GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-						CLR_BIT(GPIOA_ODR,Local_Pin_num);
-					}
-					break;
-				case DIO_PORTB:
-					if( Local_Pin_num < 8 )
-					{
-						/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-						GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-						GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-						CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-					}
-					/*		HIGH PORT				*/
-					else
-					{
-						Local_Pin_num -=8 ;
-						GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-						GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-						CLR_BIT(GPIOB_ODR,Local_Pin_num);
-
-					}
-					break;
-				case DIO_PORTC:
-					if( Local_Pin_num < 8 )
-					{
-						/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-						GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-						GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-						CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-					}
-					/*		HIGH PORT				*/
-					else
-					{
-						Local_Pin_num -=8 ;
-						GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-						GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-						CLR_BIT(GPIOC_ODR,Local_Pin_num);
-
-					}
-					break;
-				}
-				break;
-				case DIO_E_OUTPUT_50MHZ_OD:
-					switch(Local_PORT_num)
-					{
-					case DIO_PORTA:
-						if( Local_Pin_num < 8 )
-						{
-							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-						}
-						/*		HIGH PORT				*/
-						else
-						{
-							Local_Pin_num -=8 ;
-							GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-						}
-						break;
-					case DIO_PORTB:
-						if( Local_Pin_num < 8 )
-						{
-							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-						}
-						/*		HIGH PORT				*/
-						else
-						{
-							Local_Pin_num -=8 ;
-							GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-						}
-						break;
-					case DIO_PORTC:
-						if( Local_Pin_num < 8 )
-						{
-							/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-							GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-						}
-						/*		HIGH PORT				*/
-						else
-						{
-							Local_Pin_num -=8 ;
-							GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-							GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-						}
-						break;
-					}
-					break;
-					case DIO_E_OUTPUT_50MHZ_AF_PP:
-						switch(Local_PORT_num)
-						{
-						case DIO_PORTA:
-							if( Local_Pin_num < 8 )
-							{
-								/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-								GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-								GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-							}
-							/*		HIGH PORT				*/
-							else
-							{
-								Local_Pin_num -=8 ;
-								GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-								GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-							}
-							break;
-						case DIO_PORTB:
-							if( Local_Pin_num < 8 )
-							{
-								/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-								GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-								GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-							}
-							/*		HIGH PORT				*/
-							else
-							{
-								Local_Pin_num -=8 ;
-								GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-								GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-							}
-							break;
-						case DIO_PORTC:
-							if( Local_Pin_num < 8 )
-							{
-								/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-								GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-								GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-							}
-							/*		HIGH PORT				*/
-							else
-							{
-								Local_Pin_num -=8 ;
-								GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-								GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-							}
-							break;
-						}
-						break;
-						case DIO_E_OUTPUT_50MHZ_AF_OD:
-							switch(Local_PORT_num)
-							{
-							case DIO_PORTA:
-								if( Local_Pin_num < 8 )
-								{
-									/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-									GPIOA_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-									GPIOA_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-								}
-								/*		HIGH PORT				*/
-								else
-								{
-									Local_Pin_num -=8 ;
-									GPIOA_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-									GPIOA_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-								}
-								break;
-							case DIO_PORTB:
-								if( Local_Pin_num < 8 )
-								{
-									/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-									GPIOB_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-									GPIOB_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-								}
-								/*		HIGH PORT				*/
-								else
-								{
-									Local_Pin_num -=8 ;
-									GPIOB_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-									GPIOB_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-								}
-								break;
-							case DIO_PORTC:
-								if( Local_Pin_num < 8 )
-								{
-									/*	To deal with Bit Masking 1- Clear a specific Bits 2- Assign a specific Bits	*/
-									GPIOC_CRL &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-									GPIOC_CRL |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-								}
-								/*		HIGH PORT				*/
-								else
-								{
-									Local_Pin_num -=8 ;
-									GPIOC_CRH &= ~((u32)(0b1111)<<(Local_Pin_num * 4));
-									GPIOC_CRH |=  ((u32)(status)<<(Local_Pin_num * 4));
-
-								}
-								break;
-							}
-							break;
-																					/*OUTPUTEND*/
-
-		}
-
-	}
-
-	else {/*ERROR*/}
-}
-
-
 void 	DIO_WritePin(DIO_Pin_type pin,DIO_Voltage_type volt)
 {
 	u8 				Local_pin_num= pin %16;
 	DIO_Port_type 	Local_port_num= pin /16;
 	/*Range Check*/
-	if(pin<35)
+	if(pin<TOTAL_PINS)
 	{
 		switch(Local_port_num)
 		{
@@ -1851,7 +744,7 @@ DIO_Voltage_type DIO_ReadPin(DIO_Pin_type pin)
 	DIO_Port_type 	Local_port_num= pin /16;
 	DIO_Voltage_type volt=LOW;
 	/*Range Check*/
-	if(pin<35)
+	if(pin<TOTAL_PINS)
 	{
 		switch(Local_port_num)
 		{
@@ -1866,29 +759,29 @@ DIO_Voltage_type DIO_ReadPin(DIO_Pin_type pin)
 }
 void DIO_TogglePin(DIO_Pin_type pin)
 {
-	u8 				Local_pin_num= pin %16;
+
 	DIO_Port_type 	Local_port_num= pin /16;
-	if(pin<35)
+	if(pin<TOTAL_PINS)
 		{
 			switch(Local_port_num)
 			{
 			case DIO_PORTA:
-				if(DIO_ReadPin(Local_pin_num))
-					DIO_WritePin(Local_pin_num, LOW);
+				if(DIO_ReadPin(pin))
+					DIO_WritePin(pin, LOW);
 				else
-					DIO_WritePin(Local_pin_num, HIGH);
+					DIO_WritePin(pin, HIGH);
 				break;
 			case DIO_PORTB:
-				if(DIO_ReadPin(Local_pin_num))
-					DIO_WritePin(Local_pin_num, LOW);
+				if(DIO_ReadPin(pin))
+					DIO_WritePin(pin, LOW);
 				else
-					DIO_WritePin(Local_pin_num, HIGH);
+					DIO_WritePin(pin, HIGH);
 				break;
 			case DIO_PORTC:
-				if(DIO_ReadPin(Local_pin_num))
-					DIO_WritePin(Local_pin_num, LOW);
+				if(DIO_ReadPin(pin))
+					DIO_WritePin(pin, LOW);
 				else
-					DIO_WritePin(Local_pin_num, HIGH);
+					DIO_WritePin(pin, HIGH);
 				break;
 			}
 		}

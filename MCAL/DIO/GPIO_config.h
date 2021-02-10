@@ -33,32 +33,33 @@
  *			20- DIO_E_OUTPUT_50MHZ_OD                             *
  *			21- DIO_E_OUTPUT_50MHZ_AF_P                           *
  *			22-DIO_E_OUTPUT_50MHZ_AF_O							  *
- *			                            						  *
+ *			output with LOW port A                             						  *
+ *			PINB4 , PINA15 ON board
  * index is pen number and values are statues                     *
  * ****************************************************************
  */
 const DIO_PinStatus_type  PinsStatusArray[TOTAL_PINS]={
-	DIO_E_INPUT_ANALOG,             /* Port A Pin 0  */
+	DIO_E_OUTPUT_2MHZ_PUSH,          /* Port A Pin 0  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 1  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 2  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 3  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 4  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 5  */
-	DIO_E_INPUT_PULL_UP,            /* Port A Pin 6  */
+	DIO_E_OUTPUT_2MHZ_PUSH,          /* Port A Pin 6  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 7  */
-	DIO_E_INPUT_ANALOG,             /* Port A Pin 8  */
+	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 8  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 9  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 10 */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 11 */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 12 */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 13 */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 14 */
-	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port A Pin 15 */
+	DIO_E_OUTPUT_2MHZ_PULL,         /* Port A Pin 15 */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port B Pin 0  */
 	DIO_E_OUTPUT_2MHZ_PUSH,         /* Port B Pin 1  */
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port B Pin 2  */
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port B Pin 3  */
-	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port B Pin 4  */
+	DIO_E_OUTPUT_2MHZ_PULL,	        /* Port B Pin 4  */
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port B Pin 5  */
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port B Pin 6  */
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port B Pin 7  */
@@ -73,7 +74,19 @@ const DIO_PinStatus_type  PinsStatusArray[TOTAL_PINS]={
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 0  */
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 1  */
 	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 2  */
-
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 3  */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 4  */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 5  */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 6  */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 7  */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 8  */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 9  */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 10 */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 11 */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 12 */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 13 */
+	DIO_E_OUTPUT_2MHZ_PULL,	        /* Port C Pin 14 */
+	DIO_E_OUTPUT_2MHZ_PUSH,	        /* Port C Pin 15 */
 };
 
 

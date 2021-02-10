@@ -75,12 +75,24 @@ typedef enum
 	PINC0,
 	PINC1,
 	PINC2,
+	PINC3,
+	PINC4,
+	PINC5,
+	PINC6,
+	PINC7,
+	PINC8,
+	PINC9,
+	PINC10,
+	PINC11,
+	PINC12,
+	PINC13,
+	PINC14,
+	PINC15,
 	TOTAL_PINS
 }DIO_Pin_type;
 
 
 void DIO_InitPin(DIO_Pin_type pin,DIO_PinStatus_type status);
-void	DIO_Initpin2(DIO_Pin_type pin,DIO_PinStatus_type status);
 void DIO_WritePin(DIO_Pin_type pin,DIO_Voltage_type volt);
 
 DIO_Voltage_type DIO_ReadPin(DIO_Pin_type pin);
@@ -110,7 +122,7 @@ void	DIO_voidSetPortDirection(u8 Copy_u8PortID,u32 Copy_u32Mode);
 /*		SET PORT VALUE												*/
 void	DIO_voidSetPortValue(u8 Copy_u8PortID,u16 Copy_u16Value);
 
-#define 		DIO_U8_SINGLE_ASSMPLY_INSTRUCTION				1
+#define 		DIO_U8_SINGLE_ASSMPLY_INSTRUCTION				0
 
 #define 		DIO_U8_PORTA			0
 #define 		DIO_U8_PORTB			1
