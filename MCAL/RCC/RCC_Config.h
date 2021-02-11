@@ -14,7 +14,7 @@
  * 						3-RCC_PLL
  *
  */
-#define CLOCK_TYPE			RCC_PLL
+#define CLOCK_TYPE			RCC_HSE
 
 #if		CLOCK_TYPE== RCC_HSE
 /*		Can be RCC_CRYSTAL or RCC_RC */
@@ -24,7 +24,13 @@
 #if  	CLOCK_TYPE== RCC_PLL
 /*	PLL Multiplication factor 1:16 	*/
 #define RCC_PLL_MUL		    	1
-/*		PLL Source (HSE/HSI/HSE_2)		*/
+/****************************************
+ * 	PLL could be one of the following:	*
+ * 				1-HSE					*
+ * 				2-HSI					*
+ * 				3-HSE_2 (HSE/2)			*
+ * ***************************************
+ * */
 #define RCC_PLL_SOURCE		RCC_HSE_2
 #endif
 /////////////////////////////////////////////////////////////////////////
@@ -51,23 +57,23 @@ const Prephiral_Id_type  AHB_Bus_On_Off_Array[AHB_TOTAL]={
 			AHB_ETHMACRX,
 };
 
-#define 		APB2_TOTAL						11
-#define 		APB2_FIRST_PREPHERIAL	 		APB2_AFIO
+#define 		APB2_TOTAL						3
+#define 		APB2_FIRST_PREPHERIAL	 		APB2_GPIOPA
 const Prephiral_Id_type  APB2_Bus_On_Off_Array[APB2_TOTAL]={
-			APB2_AFIO,
+			//APB2_AFIO,
 			APB2_GPIOPA,
 			APB2_GPIOPB,
 			APB2_GPIOPC,
-			APB2_GPIOPD,
-			APB2_GPIOPE,
-			APB2_ADC1,
-			APB2_ADC2,
-			APB2_TIM1,
-			APB2_SPI1,
-			APB2_USART1,
+			//APB2_GPIOPD,
+			//APB2_GPIOPE,
+			//APB2_ADC1,
+			//APB2_ADC2,
+			//APB2_TIM1,
+			//APB2_SPI1,
+			//APB2_USART1,
 
 };
-#define			APB1_TOTAL					20
+#define			APB1_TOTAL					      20
 #define 		APB1_FIRST_PREPHERIAL	 		APB1_TIM2
 const Prephiral_Id_type  APB1_Bus_On_Off_Array[APB1_TOTAL]={
 			APB1_TIM2,

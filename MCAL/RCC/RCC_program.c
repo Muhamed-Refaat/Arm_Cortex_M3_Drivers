@@ -19,17 +19,20 @@ void RCC_voidInit(void)
 				Local_u32TimeOut++;
 			}
 	#elif		CLOCK_TYPE == RCC_HSE
-		/*			HSE ON			*/
-			SET_BIT(RCC_CR,16);
 		/*	System Clock Switch		*/
 			SET_BIT(RCC_CFGR,0);
 			CLR_BIT(RCC_CFGR,1);
 		/*	HSE is Crystal or RC   */
 		#if		RCC_HSE_SOURCE== RCC_CRYSTAL
+			/*0 dont bypass crystal*/
 				CLR_BIT(RCC_CR,18);
 		#elif  RCC_HSE_SOURCE== RCC_RC
+				/*1 bypass crystal*/
 				SET_BIT(RCC_CR,18);
 		#endif
+/*			HSE ON		Check on BYPASS BIT	*/
+				SET_BIT(RCC_CR,16);
+
 		/*		HSE is Ready ?	//POLLING	*/
 			while(!GET_BIT(RCC_CR,17) && Local_u32TimeOut !=10000)
 			{
