@@ -96,14 +96,14 @@ void UART_voidSendChar(UART_init_type * uart, u8  data)
 	case ID_UART1:
 		/*wait till data is Ready to be send */
 		while(!GET_BIT(UART1->SR,6));
-		/*Write data in DR register 2 to accsess 1*/
-		UART2-> DR = data;
+		/*Write data in DR register */
+		UART1-> DR = data;
 		break;
 	case ID_UART2:
 		/*wait till data is Ready to be send */
 		while(!GET_BIT(UART2->SR,7));
-		/*Write data in DR register 1 to access 2*/
-		UART1-> DR = data;
+		/*Write data in DR register */
+		UART2-> DR = data;
 		break;
 	case ID_UART3:
 		/*wait till data is Ready to be send */
@@ -123,14 +123,14 @@ u8 UART_u8ReciveChar(UART_init_type * uart)
 		case ID_UART1:
 		/* wiat Received data is ready to be read.*/
 		while(GET_BIT(UART1->SR,5));
-		/* Read data form data Register // Reversed \\  */
-		return UART2->DR;
+		/* Read data form data Register  */
+		return UART1->DR;
 		break;
 		case ID_UART2:
-		/* wiat Received data is ready to be read. // Reversed \\  */
+		/* wiat Received data is ready to be read.  */
 		while(GET_BIT(UART2->SR,5));
 		/* Read data form data Register */
-		return UART1->DR;
+		return UART2->DR;
 		break;
 		case ID_UART3:
 		/* wiat Received data is ready to be read.*/
@@ -566,7 +566,7 @@ void USART1_IRQHandler(void)
 
 	}
 	/*   CLear PIF by reading data register     */
-		UART2->DR;
+		UART1->DR;
 
 	UART_pfCallBack[0]();
 
@@ -615,7 +615,7 @@ void USART2_IRQHandler(void)
 			/* Clearing PIF by reading SR && W/R DR Register */
 
 		}
-	UART1->DR;
+	UART2->DR;
 	UART_pfCallBack[1]();
 }
 
